@@ -35,7 +35,7 @@ steps:
 - script: |
     git config --global user.email "kannan.ramamoorthy@assurity.co.nz"
     git config --global user.name "Kannan Ramamoorthy"
-    git add .
+    git add out/WorkItemExtract.json
     git commit -m "Latest Extract."
     git push -u origin master
   displayName: 'Push Extract to Git'
