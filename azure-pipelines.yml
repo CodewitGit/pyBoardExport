@@ -29,4 +29,4 @@ steps:
     #pip install pytest pytest-azurepipelines
     #pytest
     python main.py
-  displayName: 'pytest'
+  displayName: 'Run Python Script'
