@@ -30,11 +30,8 @@ steps:
     git config --global user.email "kannan.ramamoorthy@assurity.co.nz"
     git config --global user.name "Kannan Ramamoorthy"
     git show-ref
-    git branch my-temporary-work
-    git checkout master
+    git branch tmp-branch
   displayName: Create Branch
-
-
 
 - script: |
     #pip install pytest pytest-azurepipelines
@@ -47,5 +44,9 @@ steps:
     git show-ref
     git add out/WorkItemExtract.json
     git commit -m "Latest Extract."  
-    git merge my-temporary-work
+    
+    git checkout master
+    git merge tmp-branch
+    git branch -d tmp-branch
+    
   displayName: 'Push Extract to Git'
