@@ -29,5 +29,5 @@ steps:
 - script: |
     #pip install pytest pytest-azurepipelines
     #pytest
-    python main.py
+    python src\runner.py
   displayName: 'Run Python Script'
