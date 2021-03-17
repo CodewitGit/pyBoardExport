@@ -37,5 +37,5 @@ steps:
     git config --global user.name "Your Name"
     git add ./out/WorkItemExtract.json
     git commit -m "Latest Extract"
-    git push "https://github.com/CodewitGit/pyBoardExport" "master"
+    git push -u origin master
   displayName: 'Push Extract to Git'
