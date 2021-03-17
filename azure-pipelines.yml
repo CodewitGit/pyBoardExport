@@ -29,6 +29,7 @@ steps:
 - script: |
     #pip install pytest pytest-azurepipelines
     #pytest
-    cd src
-    python runner.py
+    python ./src/runner.py
+    git add ./out/WorkItemExtract.json
+    git commit -m "Latest Extract"
   displayName: 'Run Python Script'
