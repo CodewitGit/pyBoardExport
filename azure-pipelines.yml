@@ -33,9 +33,8 @@ steps:
   displayName: 'Run Python Script'
 
 - script: |
-    git config --global user.email "you@example.com"
-    git config --global user.name "Your Name"
-    git add ./out/WorkItemExtract.json
+    git config --global user.email "kannan.ramamoorthy@assurity.co.nz"
+    git config --global user.name "Kannan Ramamoorthy"
     git commit -m "Latest Extract"
     git push -u origin master
   displayName: 'Push Extract to Git'
