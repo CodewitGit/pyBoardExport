@@ -27,24 +27,20 @@ steps:
   displayName: 'Install dependencies'
 
 - script: |
-    git config --global user.email "kannan.ramamoorthy@assurity.co.nz"
-    git config --global user.name "Kannan Ramamoorthy"
-    git show-ref
-  displayName: Git Setup
-
-- script: |
     #pip install pytest pytest-azurepipelines
     #pytest
     python ./src/runner.py
   displayName: 'Run Python Script'
 
 - script: |
+    git config --global user.email "kannan.ramamoorthy@assurity.co.nz"
+    git config --global user.name "Kannan Ramamoorthy"
     git show-ref
     git add out/WorkItemExtract.json
     git commit -m "Latest Extract."     
 
-    git branch  temp
+    git branch temp
     git checkout master
-    git pull
     git merge temp   
+    git branch -d temp
   displayName: 'Push Extract to Git'
