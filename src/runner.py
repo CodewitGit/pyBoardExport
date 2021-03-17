@@ -33,7 +33,7 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)-8s %(m
 
 
 def init():
-    conf = Config(filename=__CONFIG_FILE__).config
+    conf = Config(filename='src/' + __CONFIG_FILE__).config
     context = SimpleNamespace()
     context.runner_cache = SimpleNamespace()
 
