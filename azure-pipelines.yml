@@ -29,17 +29,7 @@ steps:
 - script: |
     #pip install pytest pytest-azurepipelines
     #pytest
-    cd src
-    python runner.py
+    python ./src/runner.py
+    git add ./out/WorkItemExtract.json
+    git commit -m "Latest Extract"
   displayName: 'Run Python Script'
-- task: CopyFiles@2
-  inputs:
-    SourceFolder: '/out/*'
-    Contents: '**'
-    TargetFolder: '$(build.artifactstagingdirectory)/out'
-    OverWrite: true
-
-- task: Bash@3
-  inputs:
-    targetType: 'inline'
-    script: 'echo $(build.artifactstagingdirectory)'
