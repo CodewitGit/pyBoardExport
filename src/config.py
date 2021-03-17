@@ -6,7 +6,7 @@ import sys
 from utils import emit
 
 
-DEFAULT_CONFIG_FILE_NAME = "azure-devops-runner-config.json"
+DEFAULT_CONFIG_FILE_NAME = "azure-devops-extract-PROD-config.json"
 OLD_DEFAULT_CONFIG_FILE_NAME = "vsts-runner-config.json"
 CONFIG_KEYS = [
     'url',
@@ -62,3 +62,7 @@ class Config():
     def _check_if_name_valid(self, name):
         if name not in CONFIG_KEYS:
             raise KeyError("{0} is not a valid config key".format(name))
+
+    @property
+    def config(self):
+        return self._config

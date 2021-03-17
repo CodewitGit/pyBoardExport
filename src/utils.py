@@ -2,10 +2,9 @@
 Utility methods
 """
 import logging
-
+import json, re
 from exceptions import AccountStateError
 import http_logging
-
 
 logger = logging.getLogger(__name__)
 
@@ -72,3 +71,15 @@ def find_any_build_definition(context):
         return context.runner_cache.build_definition
     except IndexError:
         raise AccountStateError('Project "%s" doesn''t appear to have any build definitions.' % (project.name,))
+
+
+def write_json(json_txt, output_file):
+    with open(output_file, "w+") as write_file:
+        json.dump(json_txt, write_file, indent=4, sort_keys=True)
+
+
+def parse_json(dirty_json):
+    json_str = str(dirty_json).replace("'", '"')
+    json_str = re.sub("(<[^>]+>)", '""', json_str)
+    json_str = json_str.replace("None", '""')
+    return json.loads(json_str)

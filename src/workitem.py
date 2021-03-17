@@ -3,10 +3,7 @@ Work Item Tracking
 """
 import datetime
 import logging
-
-from samples import resource
 from utils import emit
-
 from azure.devops.v5_1.work_item_tracking.models import Wiql
 
 logger = logging.getLogger(__name__)
@@ -22,7 +19,6 @@ def print_work_item(work_item):
     )
 
 
-@resource("work_items")
 def get_work_items(context):
     wit_client = context.connection.clients.get_work_item_tracking_client()
 
@@ -38,7 +34,6 @@ def get_work_items(context):
     return work_items
 
 
-@resource("work_items")
 def get_work_items_as_of(context):
     wit_client = context.connection.clients.get_work_item_tracking_client()
 
@@ -57,33 +52,38 @@ def get_work_items_as_of(context):
     return work_items
 
 
-@resource("wiql_query")
 def wiql_query(context):
     wit_client = context.connection.clients.get_work_item_tracking_client()
     wiql = Wiql(
         query="""
-        select [System.Id],
-            [System.WorkItemType],
-            [System.Title],
-            [System.State],
-            [System.AreaPath],
-            [System.IterationPath],
-            [System.Tags]
-        from WorkItems
-        where [System.WorkItemType] = 'Test Case'
-        order by [System.ChangedDate] desc"""
+            select [System.Id],
+                [System.WorkItemType],
+                [System.Title],
+                [System.State],
+                [System.AreaPath],
+                [System.IterationPath],
+                [System.Tags]
+            from WorkItems
+            order by [System.ChangedDate] desc"""
     )
+    #where[System.WorkItemType] = 'Test Case'
+
     # We limit number of results to 30 on purpose
     wiql_results = wit_client.query_by_wiql(wiql, top=30).work_items
-    emit("Results: {0}".format(len(wiql_results)))
+    #emit("Results: {0}".format(len(wiql_results)))
+
     if wiql_results:
         # WIQL query gives a WorkItemReference with ID only
         # => we get the corresponding WorkItem from id
         work_items = (
             wit_client.get_work_item(int(res.id)) for res in wiql_results
         )
-        for work_item in work_items:
-            print_work_item(work_item)
+
+        #for work_item in work_items:
+        #    print_work_item(work_item)
         return work_items
     else:
         return []
+
+
+
