@@ -30,6 +30,12 @@ steps:
     #pip install pytest pytest-azurepipelines
     #pytest
     python ./src/runner.py
+  displayName: 'Run Python Script'
+
+- script: |
+    git config --global user.email "you@example.com"
+    git config --global user.name "Your Name"
     git add ./out/WorkItemExtract.json
     git commit -m "Latest Extract"
-  displayName: 'Run Python Script'
+    git push "https://github.com/CodewitGit/pyBoardExport" "master"
+  displayName: 'Push Extract to Git'
