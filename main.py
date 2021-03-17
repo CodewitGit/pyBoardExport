@@ -12,6 +12,7 @@ def connect(token, org):
     credentials = BasicAuthentication('', token)
     return Connection(base_url=org, creds=credentials)
 
+
 def get_projects():
 
     connection = connect(personal_access_token, organization_url)
