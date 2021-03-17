@@ -32,3 +32,14 @@ steps:
     cd src
     python runner.py
   displayName: 'Run Python Script'
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '/out/*'
+    Contents: '**'
+    TargetFolder: '$(build.artifactstagingdirectory)/out'
+    OverWrite: true
+
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: 'echo $(build.artifactstagingdirectory)'
