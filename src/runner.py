@@ -33,7 +33,7 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)-8s %(m
 
 
 def init():
-    conf = Config(filename='src/' + __CONFIG_FILE__).config
+    conf = Config(filename=__CONFIG_FILE__).config
     context = SimpleNamespace()
     context.runner_cache = SimpleNamespace()
 
@@ -48,12 +48,11 @@ def init():
 def extract_work_items(context):
 
     work_items = wiql_query(context)
-    parsed_json =[]
+    parsed_json = []
     for wi in work_items:
         parsed_json.append(parse_json(wi))
 
     write_json(parsed_json, output_file="out/" + __OUT_FILE__)
-
 
 
 def main(output_path=None):
@@ -67,6 +66,10 @@ def main(output_path=None):
         _get_client = context.connection.get_client
 
     extract_work_items(context)
+    work_items = work_item_field_as_of(context, '2', "Microsoft.VSTS.Scheduling.Effort", datetime.datetime.now())
+    print(work_items)
+
 
 if __name__ == '__main__':
     main()
+
