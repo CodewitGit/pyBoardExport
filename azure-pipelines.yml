@@ -34,6 +34,7 @@ steps:
     git config --global user.email "kannan.ramamoorthy@assurity.co.nz"
     git config --global user.name "Kannan Ramamoorthy"
     git config --global url."git@gitlab.com:".insteadOf "https://gitlab.com/"
+    echo "export GIT_TERMINAL_PROMPT=1" >> ~/.bashrc || ~/.zshrc
     echo "show-ref 1"
     git show-ref
     git add out/WorkItemExtract.json
