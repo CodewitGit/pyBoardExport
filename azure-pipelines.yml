@@ -33,8 +33,15 @@ steps:
 - script: |
     git config --global user.email "kannan.ramamoorthy@assurity.co.nz"
     git config --global user.name "Kannan Ramamoorthy"
-    git config --global url."git@gitlab.com:".insteadOf "https://gitlab.com/"
+    git config --global url."git@github.com:".insteadOf "https://github.com/"
     echo "export GIT_TERMINAL_PROMPT=1" >> ~/.bashrc || ~/.zshrc
+    echo "--- git config ---"
+    cat ~/.gitconfig
+
+    echo "--- custom git config"
+    cat .gitconfig-custom
+
+
     echo "show-ref 1"
     git show-ref
     git add out/WorkItemExtract.json
