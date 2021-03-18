@@ -31,23 +31,17 @@ steps:
   displayName: 'Run Python Script'
 
 - script: |
+    ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa <<<y 2>&1 >/dev/null
     git config --global user.email "kannan.ramamoorthy@assurity.co.nz"
     git config --global user.name "Kannan Ramamoorthy"
     git config --global url."git@github.com:".insteadOf "https://github.com/"
     echo "export GIT_TERMINAL_PROMPT=1" >> ~/.bashrc || ~/.zshrc
-    echo "--- git config ---"
-    cat ~/.gitconfig
+    
+    #cat ~/.gitconfig
 
-    echo "--- custom git config"
-    cat .gitconfig-custom
-
-
-    echo "show-ref 1"
-    git show-ref
     git add out/WorkItemExtract.json
     git commit -m "Latest Extract."  
     git push origin HEAD:master
-    echo "show-ref After push"
     git show-ref
     
   displayName: 'Push Extract to Git'
