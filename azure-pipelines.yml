@@ -36,5 +36,8 @@ steps:
     git show-ref
     git add -A
     git commit -m "Latest Extract."     
-    git push
+    git branch temp-branch
+    git checkout master
+    git merge temp-branch
+    git push origin master
   displayName: 'Push Extract to Git'
