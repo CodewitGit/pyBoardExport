@@ -36,8 +36,9 @@ steps:
     echo "show-ref 1"
     git show-ref
     git add out/WorkItemExtract.json
-    git commit -m "Latest Extract."     
-    git push origin HEAD:master --force
+    git commit -m "Latest Extract."  
+    git push origin HEAD:temp-branch
     echo "show-ref After push"
     git show-ref
+    git branch -d temp-branch
   displayName: 'Push Extract to Git'
