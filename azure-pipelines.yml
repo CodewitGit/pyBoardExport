@@ -33,11 +33,18 @@ steps:
 - script: |
     git config --global user.email "kannan.ramamoorthy@assurity.co.nz"
     git config --global user.name "Kannan Ramamoorthy"
+    echo "show-ref 1"
     git show-ref
-    git add -A
+    git add out/WorkItemExtract.json
     git commit -m "Latest Extract."     
     git branch temp-branch
     git checkout master
+    echo "show-ref After Checkout Master"
+    git show-ref
     git merge temp-branch
+    echo "show-ref After Merge temp-branch"
+    git show-ref
     git push origin master
+    echo "show-ref After push"
+    git show-ref
   displayName: 'Push Extract to Git'
