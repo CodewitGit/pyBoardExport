@@ -1,5 +1,3 @@
-# Python package
-# Create and test a Python package on multiple Python versions.
 # Add steps that analyze code, save the dist with the build record, publish to a PyPI-compatible index, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/python
 
@@ -36,11 +34,7 @@ steps:
     git config --global user.email "kannan.ramamoorthy@assurity.co.nz"
     git config --global user.name "Kannan Ramamoorthy"
     git show-ref
-    git add out/WorkItemExtract.json
+    git add -A
     git commit -m "Latest Extract."     
-
-    git branch temp
-    git checkout master
-    git merge temp   
-    git branch -d temp
+    git push
   displayName: 'Push Extract to Git'
