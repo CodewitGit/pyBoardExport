@@ -97,7 +97,7 @@ click==7.1.2
 colorama==0.4.4
 configparser==5.0.2
 constantly==15.1.0
-cryptography==3.0
+cryptography==3.3.2
 cssselect==1.1.0
 cycler==0.10.0
 datacompy==0.7.2
