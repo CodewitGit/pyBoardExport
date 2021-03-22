@@ -2,19 +2,21 @@ import json
 import os
 import pathlib
 import sys
-
 from utils import emit
 
 
-DEFAULT_CONFIG_FILE_NAME = "azure-devops-extract-PROD-config.json"
+DEFAULT_CONFIG_FILE_NAME = "devops-runner-config.json"
 OLD_DEFAULT_CONFIG_FILE_NAME = "vsts-runner-config.json"
 CONFIG_KEYS = [
     'url',
     'pat',
+    'project_name'
+    'project_start_date',
+    'project_end_date'
 ]
 
 
-class Config():
+class Config:
     def __init__(self, filename=None):
         if not filename:
             runner_path = (pathlib.Path(os.getcwd()) / pathlib.Path(sys.argv[0])).resolve()

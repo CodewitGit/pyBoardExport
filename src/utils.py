@@ -1,10 +1,19 @@
 """
 Utility methods
 """
+import datetime
 import logging
-import json, re
+import json
+import re
+import ast
+from dateutil import rrule
+import csv
+from pandas import DataFrame
+import pandas as pd
+
 from exceptions import AccountStateError
 import http_logging
+from typing import Union, List
 
 logger = logging.getLogger(__name__)
 
@@ -78,8 +87,124 @@ def write_json(json_txt, output_file):
         json.dump(json_txt, write_file, indent=4, sort_keys=True)
 
 
-def parse_json(dirty_json):
-    json_str = str(dirty_json).replace("'", '"')
-    json_str = re.sub("(<[^>]+>)", '""', json_str)
-    json_str = json_str.replace("None", '""')
-    return json.loads(json_str)
+def clean_json_string(dirty_json):
+    json_string = str(dirty_json).replace("  ", ' ')
+    json_string = json_string.replace(" '", ' "')
+    json_string = json_string.replace("' ", '" ')
+    json_string = json_string.replace("{'", '{"')
+    json_string = json_string.replace("'}", '"}')
+    json_string = json_string.replace(":'", ':"')
+    json_string = json_string.replace("':", '":')
+    json_string = json_string.replace(",'", ',"')
+    json_string = json_string.replace("',", '",')
+
+    json_string = json_string.replace("'", '"')
+    json_string = json_string.replace('"""', '""')
+    json_string = re.sub("(<[^>]+>)", '""', json_string)
+    json_string = json_string.replace('None', '""')
+    json_string = json_string.replace("\n", '')
+    # json_string = json_string.replace(".", "").replace(" ", "")
+    json_string = re.sub(r'[\x00-\x1f\x7f-\x9f]', ' ', json_string)
+    if json_string is not None:
+        return json_string
+    else:
+        return {}
+
+
+def json_sanitize(value: Union[str, dict, list], is_value=True) -> Union[str, dict, list]:
+    """
+    Modified version of https://stackoverflow.com/a/45526935/2635443
+
+    Recursive function that allows to remove any special characters from json, especially unknown control characters
+    """
+    if isinstance(value, dict):
+        value = {json_sanitize(k, False): json_sanitize(v, True) for k, v in value.items()}
+    elif isinstance(value, list):
+        value = [json_sanitize(v, True) for v in value]
+    elif isinstance(value, str):
+        if not is_value:
+            # Remove dots from value names
+            value = re.sub(r"[.]", "", value)
+        else:
+            # Remove all control characters
+            value = re.sub(r'[\x00-\x1f\x7f-\x9f]', ' ', value)
+    return value
+
+
+def convert_work_item_to_dataframe(work_items):
+    workitems_df_list: List[DataFrame] = []
+    rec_count = 0
+    for work_item in work_items:
+        field_names = []
+        for field in work_item.fields:
+            field_names.append(field)
+
+        wi = pd.DataFrame(work_item.fields, index=[rec_count])
+        workitems_df_list.append(wi)
+        rec_count += 1
+
+        """row = "{0},{1},{2},{3},{4},{5},{6}".format(
+            work_item.id,
+            work_item.fields["System.TeamProject"],
+            work_item.fields["System.WorkItemType"],
+            work_item.fields["System.Title"],
+            work_item.fields["System.State"],
+            work_item.fields["Microsoft.VSTS.Common.Priority"],
+            work_item.fields["System.CreatedDate"]
+        )
+        workitems_df_list.append(pd.DataFrame(list(reader([row]))))
+    """
+    workitems_final_df = pd.concat(workitems_df_list)
+    return workitems_final_df
+
+
+def parse_json(json_file_name):
+    list_of_json = []
+    with open(json_file_name) as edstats:
+        data = json.load(edstats)
+        for row in data:
+            try:
+                row = ast.literal_eval(row)
+                row = json.dumps(row)
+            except ValueError as e:
+                print("Error in JSON: ", e)
+                break
+
+            # print(row['fields']['System.Title'])
+            if row is not None:
+                row = json_sanitize(row)
+                row = json.dumps(row)
+                list_of_json.append(row)
+
+
+    return list_of_json
+
+
+def weeks_between(start_date, end_date):
+    start_date = datetime.datetime.strptime(str(start_date), '%Y-%m-%d').date()
+    end_date = datetime.datetime.strptime(str(end_date), '%Y-%m-%d').date()
+    weeks = rrule.rrule(rrule.WEEKLY, dtstart=start_date, until=end_date)
+    return weeks.count()
+
+
+def get_pct_completion(item_start_date, item_end_date, curr_week_starting):
+    if str(item_start_date) != 'nan' and str(item_end_date) != 'nan':
+        try:
+            start_date = datetime.datetime.strptime(str(item_start_date), '%Y-%m-%dT%H:%M:%SZ').date()
+            end_date = datetime.datetime.strptime(str(item_end_date), '%Y-%m-%dT%H:%M:%SZ').date()
+            curr_week_starting = datetime.datetime.strptime(str(curr_week_starting), '%Y-%m-%d %H:%M:%S').date()
+            tot_weeks_wi = weeks_between(start_date, end_date)
+            weeks_passed = weeks_between(start_date, curr_week_starting)
+            pct = (weeks_passed / tot_weeks_wi) * 100
+            if pct >= 100:
+                pct = 100
+        except TypeError as e:
+            print(item_start_date, item_end_date, curr_week_starting, e)
+    else:
+        pct = 0
+    return pct
+
+
+def write_df_to_csv(data_frame, output_file_name):
+    data_frame.to_csv(output_file_name, sep=',', index=False, mode='w', quoting=csv.QUOTE_NONE, quotechar='"',
+                      escapechar="\\")
