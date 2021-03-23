@@ -196,6 +196,9 @@ def weeks_between(start_date, end_date):
     return int(x / np.timedelta64(1, 'W'))
 
 
+def days_between(start_date, end_date):
+    x = pd.to_datetime(end_date) - pd.to_datetime(start_date)
+    return int(x / np.timedelta64(1, 'D'))
 
 
 def calc_pct_completion(item_start_date, item_end_date, curr_week_starting):
@@ -212,6 +215,17 @@ def calc_pct_completion(item_start_date, item_end_date, curr_week_starting):
         except TypeError as e:
             logger.debug("Type Error: Args %s, %s", item_start_date, item_end_date)
             print(item_start_date, item_end_date, curr_week_starting, e)
+            pct = -1
+        except ZeroDivisionError:
+            logger.debug("ZeroDivisionError: (less than a week diff) Args %s, %s", item_start_date, item_end_date)
+
+            tot_days_wi = days_between(start_date, end_date)
+            days_passed = days_between(start_date, curr_week_starting)
+            if days_passed > 0 and abs(tot_days_wi) > 0 and tot_days_wi is not None:
+                pct = (days_passed / tot_days_wi) * 100
+            else:
+                pct = 0
+            pct = 0
     else:
         pct = 0
 
