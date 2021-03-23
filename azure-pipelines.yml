@@ -26,6 +26,7 @@ steps:
     pip install -r requirements.txt
     pip install absl-py
     pip install tensorflow
+    pip install pandas
     #pip freeze > requirements_new.txt
     #pip install -r requirements_new.txt
 
