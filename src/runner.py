@@ -40,7 +40,7 @@ from tqdm import *
 
 __TASK__ = "work-item-extractor"
 __VERSION__ = "1.0.0"
-__CONFIG_FILE__ = "devops-runner-config-test.json"
+__CONFIG_FILE__ = "devops-runner-config.json"
 __OUT_FILE__ = "out/WorkItemTracking.csv"
 __DUMP_FILE__ = "out/WorkItemExtract.csv"
 
