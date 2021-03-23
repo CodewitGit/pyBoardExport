@@ -1,0 +1,9 @@
+# Basic dependabot.yml file with
+
+version: 2
+updates:
+  # Enable version updates for pip
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "daily"
