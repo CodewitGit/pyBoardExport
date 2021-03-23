@@ -34,6 +34,8 @@ steps:
 - script: |
     #pip install pytest pytest-azurepipelines
     #pytest
+    echo "-----------PAT--------------"
+    echo $(pat)
     python ./src/runner.py
   displayName: 'Run Python Script'
 
