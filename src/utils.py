@@ -10,10 +10,10 @@ from dateutil import rrule
 import csv
 from pandas import DataFrame
 import pandas as pd
-
 from exceptions import AccountStateError
 import http_logging
 from typing import Union, List
+import numpy as np
 
 logger = logging.getLogger(__name__)
 
@@ -83,6 +83,7 @@ def find_any_build_definition(context):
 
 
 def write_json(json_txt, output_file):
+    logger.debug("Writing json file %s", output_file)
     with open(output_file, "w+") as write_file:
         json.dump(json_txt, write_file, indent=4, sort_keys=True)
 
@@ -117,6 +118,8 @@ def json_sanitize(value: Union[str, dict, list], is_value=True) -> Union[str, di
 
     Recursive function that allows to remove any special characters from json, especially unknown control characters
     """
+    logger.debug("Sanitizing JSON")
+
     if isinstance(value, dict):
         value = {json_sanitize(k, False): json_sanitize(v, True) for k, v in value.items()}
     elif isinstance(value, list):
@@ -132,6 +135,8 @@ def json_sanitize(value: Union[str, dict, list], is_value=True) -> Union[str, di
 
 
 def convert_work_item_to_dataframe(work_items):
+    logger.debug("Converting Workitems List to Dataframe")
+
     workitems_df_list: List[DataFrame] = []
     rec_count = 0
     for work_item in work_items:
@@ -154,7 +159,13 @@ def convert_work_item_to_dataframe(work_items):
         )
         workitems_df_list.append(pd.DataFrame(list(reader([row]))))
     """
-    workitems_final_df = pd.concat(workitems_df_list)
+
+    try:
+        workitems_final_df = pd.concat(workitems_df_list)
+    except ValueError as e:
+        logger.log("No data to convert to Dataframe - Error: ", e)
+        print("No data to convert to Dataframe. Review Program Only Wiql query")
+
     return workitems_final_df
 
 
@@ -181,13 +192,13 @@ def parse_json(json_file_name):
 
 
 def weeks_between(start_date, end_date):
-    start_date = datetime.datetime.strptime(str(start_date), '%Y-%m-%d').date()
-    end_date = datetime.datetime.strptime(str(end_date), '%Y-%m-%d').date()
-    weeks = rrule.rrule(rrule.WEEKLY, dtstart=start_date, until=end_date)
-    return weeks.count()
+    x = pd.to_datetime(end_date) - pd.to_datetime(start_date)
+    return int(x / np.timedelta64(1, 'W'))
 
 
-def get_pct_completion(item_start_date, item_end_date, curr_week_starting):
+
+
+def calc_pct_completion(item_start_date, item_end_date, curr_week_starting):
     if str(item_start_date) != 'nan' and str(item_end_date) != 'nan':
         try:
             start_date = datetime.datetime.strptime(str(item_start_date), '%Y-%m-%dT%H:%M:%SZ').date()
@@ -199,12 +210,18 @@ def get_pct_completion(item_start_date, item_end_date, curr_week_starting):
             if pct >= 100:
                 pct = 100
         except TypeError as e:
+            logger.debug("Type Error: Args %s, %s", item_start_date, item_end_date)
             print(item_start_date, item_end_date, curr_week_starting, e)
     else:
         pct = 0
+
     return pct
 
 
 def write_df_to_csv(data_frame, output_file_name):
-    data_frame.to_csv(output_file_name, sep=',', index=False, mode='w', quoting=csv.QUOTE_NONE, quotechar='"',
+    logger.debug("Writing out csv file %s", output_file_name)
+    data_frame.to_csv(output_file_name, sep=',', index=False, mode='w', quoting=csv.QUOTE_ALL, quotechar='"',
                       escapechar="\\")
+
+
+
