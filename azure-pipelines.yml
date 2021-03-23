@@ -35,7 +35,7 @@ steps:
     #pip install pytest pytest-azurepipelines
     #pytest
     echo "-----------PAT--------------"
-    echo $(pat)
+    sed -i 's/<0123456789>/$(PAT)/g' $(CONFIGFILE)
     python ./src/runner.py
   displayName: 'Run Python Script'
 
