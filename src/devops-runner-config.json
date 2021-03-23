@@ -3,7 +3,7 @@
   "project_start_date": "2020-11-30",
   "project_end_date": "2023-11-30",
   "url": "https://statisticsnz.visualstudio.com",
-  "pat": "xxxxxxxxxxxxxxx",
+  "pat": "<0123456789>",
   "test_run": true,
   "test_work_item_id": 20036,
   "future_actuals_are_None": false,
