@@ -22,10 +22,17 @@ steps:
     python -m pip install --upgrade pip
     pip install azure-devops
     pip install numpy
-    pip install -r requirements.txt
-    pip freeze > requirements_new.txt
-    pip install -r requirements_new.txt
-  displayName: 'Install dependencies'
+    #pip install dateutil
+    #pip install -r requirements.txt
+    #pip freeze > requirements_new.txt
+    #pip install -r requirements_new.txt
+
+- script: pip3.6 install --upgrade pip setuptools wheel
+  displayName: "Install package tooling"
+
+- script: pip3.6 install -r requirements.txt
+  displayName: "Install requirements"
+
 
 - script: |
     #pip install pytest pytest-azurepipelines
