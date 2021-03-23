@@ -236,7 +236,6 @@ if __name__ == '__main__':
     main()
 
     # Execution Complete
-    print("Extract Completed")
     end = time.time()
     hours, rem = divmod(end - start, 3600)
     minutes, seconds = divmod(rem, 60)
