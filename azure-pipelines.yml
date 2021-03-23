@@ -18,12 +18,6 @@ steps:
     versionSpec: '$(python.version)'
   displayName: 'Use Python $(python.version)'
 
-- task: InstallSSHKey@0
-  inputs:
-    knownHostsEntry: 'github.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCq0GieLdhJWLbwgQEfL291T8hilry7TgHQW8rXRpfUyeZ3xJYs/ShNSV/6W5RsIi85SqZ6frevZ7srL0Xn7ys1FLzEAGUJnpawaTY+upJ9pBEgZbOEVln9xJK6BAlS9D7c/OlSfR6fY0BOmuK1fCylU0IhkxSumItnFlsJxsXtGsmFZCZgpSqqfgfj7EPyAM8KX/k4vUTsXjiJz4JWMQLxSWjRrtzhT2le7AfGt7IzYL2EgsqecdT/SHeXao++GBCAiPAzDSoCbSQb+nXfldaDFCU+ggdg8YVA5HmJR6oUtG+CIiKRBobTVDZFkSwP5yMoHBSt/XH2sVLLr11jmBYnXSrvziqHBAuqeb9/lWxDKDT3IC90TyzL7BhGcpqvxOQoMQNJcw77x7wIAYdEKz/syUi/R17ikD4Gx1oQ+xMuWeqCuU2a7NM03vI2Mxs7gklApyy1K7sJ2LuDTd9Z1XlqxOKktBiMWyhZRHg9tlR87wC39PceFBY57JgEHd9QnR8= kannan.ramamoorthy@assurity.co.nz'
-    sshPublicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCq0GieLdhJWLbwgQEfL291T8hilry7TgHQW8rXRpfUyeZ3xJYs/ShNSV/6W5RsIi85SqZ6frevZ7srL0Xn7ys1FLzEAGUJnpawaTY+upJ9pBEgZbOEVln9xJK6BAlS9D7c/OlSfR6fY0BOmuK1fCylU0IhkxSumItnFlsJxsXtGsmFZCZgpSqqfgfj7EPyAM8KX/k4vUTsXjiJz4JWMQLxSWjRrtzhT2le7AfGt7IzYL2EgsqecdT/SHeXao++GBCAiPAzDSoCbSQb+nXfldaDFCU+ggdg8YVA5HmJR6oUtG+CIiKRBobTVDZFkSwP5yMoHBSt/XH2sVLLr11jmBYnXSrvziqHBAuqeb9/lWxDKDT3IC90TyzL7BhGcpqvxOQoMQNJcw77x7wIAYdEKz/syUi/R17ikD4Gx1oQ+xMuWeqCuU2a7NM03vI2Mxs7gklApyy1K7sJ2LuDTd9Z1XlqxOKktBiMWyhZRHg9tlR87wC39PceFBY57JgEHd9QnR8= kannan.ramamoorthy@assurity.co.nz'
-    sshKeySecureFile: 'id_rsa.pub'
-
 - script: |
     python -m pip install --upgrade pip
     pip install azure-devops
@@ -49,5 +43,4 @@ steps:
     git commit -m "Latest Extract."  
     git push origin HEAD:master
     git show-ref
-    
   displayName: 'Push Extract to Git'
