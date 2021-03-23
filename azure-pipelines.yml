@@ -22,9 +22,9 @@ steps:
     python -m pip install --upgrade pip
     pip install azure-devops
     pip install numpy
-    #pip freeze > requirements.txt
     pip install -r requirements.txt
-  displayName: 'Install dependencies'
+    pip freeze > requirements_new.txt
+    pip install -r requirements_new.txt
 
 - script: |
     #pip install pytest pytest-azurepipelines
