@@ -18,7 +18,7 @@ azure-keyvault==1.1.0
 azure-loganalytics==0.1.0
 azure-mgmt==4.0.0
 azure-mgmt-advisor==1.0.1
-azure-mgmt-applicationinsights==0.1.1
+azure-mgmt-applicationinsights==1.0.0
 azure-mgmt-authorization==0.50.0
 azure-mgmt-batch==5.0.1
 azure-mgmt-batchai==2.0.0
