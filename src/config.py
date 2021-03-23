@@ -12,7 +12,11 @@ CONFIG_KEYS = [
     'pat',
     'project_name'
     'project_start_date',
-    'project_end_date'
+    'project_end_date',
+    'test_run',
+    'test_work_item_id',
+    'future_actuals_are_None',
+    'fields_array'
 ]
 
 
