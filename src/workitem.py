@@ -241,6 +241,7 @@ def get_work_item_percent_as_of(context, df_work_items, current_week, as_of_week
     prev_white_pct = 0
     white_pct = 0
 
+    # User as_of_week_starting for calculating Actual Completion Only
     if weeks_between(datetime.datetime.strptime(str(as_of_week), '%Y-%m-%d %H:%M:%S').date(), datetime.datetime.strptime(str(current_week), '%Y-%m-%d %H:%M:%S').date()) <= 0:
         as_of_week_starting = current_week
         future_week = True
@@ -257,10 +258,10 @@ def get_work_item_percent_as_of(context, df_work_items, current_week, as_of_week
 
         # Calculate GREEN Progress %
         green_pct = calc_pct_completion(wi_row['Custom.GreenStartDate'], wi_row['Custom.GreenEndDate'],
-                                        as_of_week_starting)
+                                        as_of_week)
 
         # Calculate RED Progress %
-        red_pct = calc_pct_completion(wi_row['Custom.RedStartDate'], wi_row['Custom.RedEndDate'], as_of_week_starting)
+        red_pct = calc_pct_completion(wi_row['Custom.RedStartDate'], wi_row['Custom.RedEndDate'], as_of_week)
 
         id = current_wi_id
         id = str(id) + ',' + str(id + 1)
@@ -294,7 +295,7 @@ def get_work_item_percent_as_of(context, df_work_items, current_week, as_of_week
         prev_white_pct = white_pct
 
         # WARNING : Any alteration in the below statement would need further changes at the Dataframe column definition
-        df_intr.append([current_wi_id, as_of_week_starting.date(),
+        df_intr.append([current_wi_id, datetime.datetime.strptime(str(as_of_week), '%Y-%m-%d %H:%M:%S').date(),
                         round(green_pct), round(red_pct), white_pct])
 
         # If Text Exit in 5 iterations
