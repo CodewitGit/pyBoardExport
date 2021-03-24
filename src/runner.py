@@ -41,7 +41,7 @@ from optparse import OptionParser
 
 __TASK__ = "work-item-extractor"
 __VERSION__ = "1.0.0"
-__CONFIG_FILE__ = "devops-runner-config.json"
+__CONFIG_FILE__ = "./devops-runner-config.json"
 __OUT_FILE__ = "out/WorkItemTracking.csv"
 __DUMP_FILE__ = "out/WorkItemExtract.csv"
 
@@ -59,7 +59,7 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)-8s %(m
                     datefmt='%a, %d %b %Y %H:%M:%S', filename='logs/run.log', filemode='w')
 
 
-def init(token, config_file):
+def init(token, config_file=None):
     if config_file is None:
         conf = Config(filename=__CONFIG_FILE__).config
     else:
@@ -104,7 +104,6 @@ def params():
                       action="store", type="string",
                       help="Personal Access Token for Azure DevOps Repo")
     (options, args) = parser.parse_args()
-    print(options.config_file, args)
 
     if options.config_file and options.pat:
         # print("reading %s..." % options.filename)
