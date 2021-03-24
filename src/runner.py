@@ -37,6 +37,7 @@ from config import Config
 from utils import *
 import time, sys
 from tqdm import *
+from optparse import OptionParser
 
 __TASK__ = "work-item-extractor"
 __VERSION__ = "1.0.0"
@@ -58,8 +59,11 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)-8s %(m
                     datefmt='%a, %d %b %Y %H:%M:%S', filename='logs/run.log', filemode='w')
 
 
-def init(token):
-    conf = Config(filename=__CONFIG_FILE__).config
+def init(token, config_file):
+    if config_file is None:
+        conf = Config(filename=__CONFIG_FILE__).config
+    else:
+        conf = Config(filename=config_file).config
 
     # Get Token from argument
     pat = token
@@ -89,7 +93,31 @@ def init(token):
     return context
 
 
-def main(token, output_path=None):
+def params():
+
+    # Parse Options
+    usage = "usage: %prog [options] arg1 arg2"
+    parser = OptionParser(usage=usage)
+    parser.add_option("-c", "--conf", dest="config_file",
+                      help="Config File Name", metavar="FILE")
+    parser.add_option("-p", "--passwd", dest="pat",
+                      action="store", type="string",
+                      help="Personal Access Token for Azure DevOps Repo")
+    (options, args) = parser.parse_args()
+    print(options.config_file, args)
+
+    if options.config_file and options.pat:
+        # print("reading %s..." % options.filename)
+        main(config_file=options.config_file, token=options.pat)
+    elif options.config_file:
+        main(config_file=options.config_file, token='')
+    elif options.pat:
+        main(token=options.pat)
+    elif len(args) != 1:
+        main(token='')
+
+
+def main(token, config_file=None, output_path=None):
 
     # Program Started
     start = time.time()
@@ -97,7 +125,7 @@ def main(token, output_path=None):
     print("Initiated at ", datetime.datetime.now())
 
     # Pass PAT argument
-    context = init(token)
+    context = init(token, config_file)
     test_run = context.test_run
     test_work_item_id = context.test_work_item_id
 
@@ -250,13 +278,10 @@ def main(token, output_path=None):
     print("Time taken: {:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes), seconds))
     logger.info("***** Extract Execution Ended *****")
 
+
 if __name__ == '__main__':
 
-    # Execute Extracting Process
-    if len(sys.argv) > 1:
-        main(token=sys.argv[1])
-    else:
-        main(token='')
+    params()
 
 
 
