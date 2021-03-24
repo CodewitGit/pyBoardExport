@@ -35,7 +35,7 @@ from azure.devops.connection import Connection
 from workitem import *
 from config import Config
 from utils import *
-import time
+import time, sys
 from tqdm import *
 
 __TASK__ = "work-item-extractor"
@@ -58,15 +58,24 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)-8s %(m
                     datefmt='%a, %d %b %Y %H:%M:%S', filename='logs/run.log', filemode='w')
 
 
-def init():
+def init(token):
     conf = Config(filename=__CONFIG_FILE__).config
+
+    # Get Token from argument
+    pat = token
+    if len(pat.strip()) > 0:
+        pat = token
+        logger.info("Using PAT from argument")
+    else:
+        pat = conf['pat']
+
     context = SimpleNamespace()
     context.runner_cache = SimpleNamespace()
 
     # Setup the connection
     context.connection = Connection(
         base_url=conf['url'],
-        creds=BasicAuthentication('PAT', conf['pat']),
+        creds=BasicAuthentication('PAT', pat),
         user_agent=__TASK__ + '/' + __VERSION__)
     context.project_name = conf['project_name']
     context.project_start_date = conf['project_start_date']
@@ -80,8 +89,15 @@ def init():
     return context
 
 
-def main(output_path=None):
-    context = init()
+def main(token, output_path=None):
+
+    # Program Started
+    start = time.time()
+    logger.info("***** Extract Execution Started *****")
+    print("Initiated at ", datetime.datetime.now())
+
+    # Pass PAT argument
+    context = init(token)
     test_run = context.test_run
     test_work_item_id = context.test_work_item_id
 
@@ -210,7 +226,7 @@ def main(output_path=None):
         current_iteration += work_item_count
         progress_bar = round((current_iteration / total_iteration) * 100)
         pbar.update(n=work_item_count)
-        #print("Progress: ", progress_bar, "%")
+
     # Convert the result (Historical Progress Percentages) to Dataframe
     df_tmp = pd.DataFrame(df_intr)
 
@@ -225,15 +241,7 @@ def main(output_path=None):
     if test_run:
         print(df_tmp)
 
-
-if __name__ == '__main__':
-    # Program Started
-    start = time.time()
-    logger.info("***** Extract Execution Started *****")
-    print("Initiated at ", datetime.datetime.now())
-
-    # Execute Extracting Process
-    main()
+    pbar.close()
 
     # Execution Complete
     end = time.time()
@@ -241,3 +249,14 @@ if __name__ == '__main__':
     minutes, seconds = divmod(rem, 60)
     print("Time taken: {:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes), seconds))
     logger.info("***** Extract Execution Ended *****")
+
+if __name__ == '__main__':
+
+    # Execute Extracting Process
+    if len(sys.argv) > 1:
+        main(token=sys.argv[1])
+    else:
+        main(token='')
+
+
+
