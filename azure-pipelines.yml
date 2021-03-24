@@ -31,8 +31,7 @@ steps:
   displayName: 'Install Dependencies'
 
 - script: |
-    pwd
-    ls -ltr
-    python ./src/runner.py -passwd $(PAT)
+    cd ./src
+    python ./runner.py -passwd $(PAT)
   displayName: 'Run Python Script'
 
