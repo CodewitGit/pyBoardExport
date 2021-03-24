@@ -4,6 +4,11 @@
 trigger:
 - master
 
+variables:
+- group: Common_Variable_Group
+- name: pat
+  value: $[variables.pat]
+
 pool:
   vmImage: ubuntu-latest
 strategy:
@@ -32,6 +37,9 @@ steps:
 
 - script: |
     cd ./src
-    python ./runner.py -passwd $(PAT)
+    echo $(PAT)
+    echo $(pat)
+
+    python ./runner.py -passwd $(pat)
   displayName: 'Run Python Script'
 
