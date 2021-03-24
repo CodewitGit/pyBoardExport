@@ -6,8 +6,8 @@ trigger:
 
 variables:
 - group: common-variable-group
-- name: pat
-  value: $[pat]
+- name: key.pat
+  value: $[key.pat]
 
 pool:
   vmImage: ubuntu-latest
