@@ -4,6 +4,12 @@
 trigger:
 - master
 
+# Login as Service Account
+# Create Personal Account Token
+# Variable Group setup
+# Pipeline Linked to Variable Group
+# variable: key.pat value:xxxxxxxxxxxx
+
 variables:
 - group: common-variable-group
 - name: pat
