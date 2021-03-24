@@ -4,7 +4,7 @@
   "project_end_date": "2023-11-30",
   "url": "https://statisticsnz.visualstudio.com",
   "pat": "<<0123456789>>",
-  "test_run": false,
+  "test_run": true,
   "test_work_item_id": 20036,
   "future_actuals_are_None": false,
   "fields_array": ["System.Id",
