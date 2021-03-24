@@ -158,23 +158,28 @@ def wiql_query_with_filter(context, top_n=None, program_only=None, fields_array=
 
     wiql = Wiql(query)
 
-    # We limit number of results is top_n is supplied
-    if top_n is None:
-        wiql_results = wit_client.query_by_wiql(wiql).work_items
+    try:
+        # We limit number of results is top_n is supplied
+        if top_n is None:
+            wiql_results = wit_client.query_by_wiql(wiql).work_items
+        else:
+            wiql_results = wit_client.query_by_wiql(wiql, top=top_n).work_items
+        emit("Extract Count: {0}".format(len(wiql_results)))
+
+        if wiql_results:
+            # WIQL query gives a WorkItemReference with ID only
+            # => we get the corresponding WorkItem from id
+            work_items = (
+                wit_client.get_work_item(int(res.id), fields=fields_array, as_of=as_of_date) for res in wiql_results
+            )
+    except:
+        print("ERROR: Auth Failed. Verify PAT in Configuration")
+        logger.error("ERROR: Auth Failed. Verify PAT in Configuration")
+        exit(16)
+        #return []
     else:
-        wiql_results = wit_client.query_by_wiql(wiql, top=top_n).work_items
-    emit("Extract Count: {0}".format(len(wiql_results)))
-
-    if wiql_results:
-        # WIQL query gives a WorkItemReference with ID only
-        # => we get the corresponding WorkItem from id
-        work_items = (
-            wit_client.get_work_item(int(res.id), fields=fields_array, as_of=as_of_date) for res in wiql_results
-        )
-
         return work_items
-    else:
-        return []
+
 
 
 # Using WIQL
