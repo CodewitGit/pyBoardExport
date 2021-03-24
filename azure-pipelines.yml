@@ -36,8 +36,7 @@ steps:
     #pytest
     echo "Config File"
     echo $(CONFIGFILE)
-    sed -i 's/<0123456789>/$(PAT)/g' $(CONFIGFILE)
-    python ./src/runner.py
+    python ./src/runner.py $(CONFIGFILE)
   displayName: 'Run Python Script'
 
 - script: |
