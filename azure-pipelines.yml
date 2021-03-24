@@ -37,9 +37,7 @@ steps:
 
 - script: |
     cd ./src
-    echo $(PAT)
-    echo $(pat)
 
-    python ./runner.py -passwd $(pat)
+    python ./runner.py -p $(pat) -c devops-runner-config.json
   displayName: 'Run Python Script'
 
