@@ -209,9 +209,14 @@ def calc_pct_completion(item_start_date, item_end_date, curr_week_starting):
             curr_week_starting = datetime.datetime.strptime(str(curr_week_starting), '%Y-%m-%d %H:%M:%S').date()
             tot_weeks_wi = weeks_between(start_date, end_date)
             weeks_passed = weeks_between(start_date, curr_week_starting)
-            pct = (weeks_passed / tot_weeks_wi) * 100
+            if weeks_passed < 0:
+                pct = 0
+            else:
+                pct = (weeks_passed / tot_weeks_wi) * 100
+
             if pct >= 100:
                 pct = 100
+
         except TypeError as e:
             logger.debug("Type Error: Args %s, %s", item_start_date, item_end_date)
             print(item_start_date, item_end_date, curr_week_starting, e)
