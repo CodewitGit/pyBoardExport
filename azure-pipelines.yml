@@ -5,9 +5,7 @@ trigger:
 - master
 
 variables:
-- group: Common_Variable_Group
-- name: pat
-  value: $[variables.pat]
+- group: common-variable-group
 
 pool:
   vmImage: ubuntu-latest
@@ -37,9 +35,9 @@ steps:
 
 - script: |
     cd ./src
-    echo $(PAT)
+    echo $(key.pat)
     echo $(pat)
 
-    python ./runner.py -passwd $(pat)
+    python ./runner.py -passwd $(key.pat)
   displayName: 'Run Python Script'
 
