@@ -60,7 +60,7 @@ The configuration file is a simple JSON file which resides in the /src directory
 ```
 
 ## Options
-User can overide the default config file by using a custom config file in the above mention format.
+User can override the default config file by using a custom config file in the above mention format.
 
 ```bash
 #To run the script with Configuration Override
@@ -70,7 +70,7 @@ $ python ./runner -c config-file.json
 
 ## Output
 Two csv files are extracted into ./src/out folder from Azure DevOps for the given Project. These files will be overwritten evey time its extracted.
-No mechanism is in place to archive and version contro the files.
+No mechanism is in place to archive and version control the files.
 
 1. WorkItemExtract.csv
 2. WorkItemTracking.csv
